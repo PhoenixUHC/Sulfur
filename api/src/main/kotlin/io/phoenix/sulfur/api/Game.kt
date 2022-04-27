@@ -2,7 +2,6 @@ package io.phoenix.sulfur.api
 
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
-import org.bukkit.plugin.java.JavaPlugin
 import redis.clients.jedis.JedisPooled
 import java.util.*
 import kotlin.collections.HashSet
@@ -49,8 +48,8 @@ class Game(
     fun server(): String = redis.hget(id.toString(), "server")
 
     /** Sulfur dependent plugin responsible for this game */
-    fun plugin(): JavaPlugin =
-        Bukkit.getPluginManager().getPlugin(redis.hget(id.toString(), "plugin")) as JavaPlugin
+    fun plugin(): SulfurPlugin =
+        Bukkit.getPluginManager().getPlugin(redis.hget(id.toString(), "plugin")) as SulfurPlugin
 
     /** Unique identifier of the host for this game */
     fun host(): Player = Player(this, UUID.fromString(redis.hget(id.toString(), "host")))

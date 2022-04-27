@@ -2,6 +2,7 @@ package io.phoenix.sulfur.plugin
 
 import io.phoenix.sulfur.api.Game
 import io.phoenix.sulfur.api.Sulfur
+import io.phoenix.sulfur.api.SulfurPlugin
 import org.bukkit.plugin.java.JavaPlugin
 import redis.clients.jedis.JedisPooled
 import java.util.*
@@ -9,17 +10,19 @@ import java.util.*
 class JavaSulfur : JavaPlugin(), Sulfur {
     private lateinit var redis: JedisPooled
 
-    override fun registerGame(host: UUID, plugin: JavaPlugin, server: String): Game {
-        val id = UUID.randomUUID()
+    override fun registerGame(host: UUID, plugin: SulfurPlugin, server: String): Game {
+        val game = Game(UUID.randomUUID(), redis)
 
-        redis.hset(id.toString(), hashMapOf(
+        redis.hset(game.id.toString(), hashMapOf(
             "host" to host.toString(),
             "plugin" to plugin.name,
             "server" to server,
         ))
-        redis.sadd("games", id.toString())
+        redis.sadd("games", game.id.toString())
 
-        return Game(id,  redis)
+        plugin.onRegisterGame(game)
+
+        return game
     }
 
     override fun findGame(id: UUID): Game? {
