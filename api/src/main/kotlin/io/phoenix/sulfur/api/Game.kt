@@ -26,6 +26,8 @@ class Game(
 
         /** Whether the player was eliminated */
         fun dead(): Boolean = game.redis.hget("${game.id}:players:$id", "dead") != "0"
+        /** Whether the player was eliminated */
+        fun dead(dead: Boolean) = game.redis.hset("${game.id}:players:$id", "dead", if (dead) "1" else "0")
 
         /** Bukkit player */
         fun bukkitPlayer(): OfflinePlayer = Bukkit.getOfflinePlayer(id)
@@ -59,11 +61,13 @@ class Game(
         .map { Player(this, UUID.fromString(it)) }
         .toHashSet()
     /** Adds a player to the game */
-    fun addPlayer(id: UUID) {
+    fun addPlayer(id: UUID): Player {
         redis.hset("${this.id}:players:$id", hashMapOf(
             "dead" to "0",
         ))
         redis.sadd("${this.id}:players", id.toString())
+
+        return Player(this, id)
     }
     /** Finds a player from its unique id */
     fun findPlayer(id: UUID): Player? {
