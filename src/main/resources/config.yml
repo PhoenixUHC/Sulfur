@@ -1,0 +1,4 @@
+# Sulfur stores data relative to games in a Redis database. Specify the address of your running Redis database.
+redis:
+    host: 127.0.0.1
+    port: 6379

@@ -10,7 +10,10 @@ class JavaSulfur : JavaPlugin(), Sulfur {
     override fun onEnable() {
         saveDefaultConfig()
 
-        database = SulfurDatabase("127.0.0.1", 6379)
+        database = SulfurDatabase(
+            config.getString("redis.host"),
+            config.getInt("redis.port"),
+        )
 
         logger.info("Enabled Sulfur")
     }
