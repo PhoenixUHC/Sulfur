@@ -22,6 +22,9 @@ class Game(
         /** Whether the player exists */
         fun exists(): Boolean = game.redis.sismember("${game.id}:players", id.toString())
 
+        /** Metadata hash for this player */
+        val metadata = Metadata(game.redis, "${game.id}:players:$id:metadata")
+
         /** Whether the player was eliminated */
         fun dead(): Boolean = game.redis.hget("${game.id}:players:$id", "dead") != "0"
 
@@ -30,13 +33,17 @@ class Game(
 
         /** Removes the player from the database */
         fun delete() {
-            game.redis.del("${game.id}:players:$id")
+            metadata.clear()
             game.redis.srem("${game.id}:players", id.toString())
+            game.redis.del("${game.id}:players:$id")
         }
     }
 
     /** Whether the game exists in the database */
     fun exists(): Boolean = redis.sismember("games", id.toString())
+
+    /** Metadata hash for this game */
+    val metadata = Metadata(redis, "$id:metadata")
 
     /** Name of the server running the game */
     fun server(): String = redis.hget(id.toString(), "server")
@@ -77,8 +84,10 @@ class Game(
 
     /** Removes the game from the database */
     fun delete() {
-        redis.del(id.toString())
-        redis.srem("games", id.toString())
         players().forEach { it.delete() }
+        metadata.clear()
+        redis.srem("games", id.toString())
+        redis.del("$id:players")
+        redis.del(id.toString())
     }
 }
