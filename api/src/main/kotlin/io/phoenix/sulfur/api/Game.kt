@@ -47,7 +47,7 @@ class Game(
     val metadata = Metadata(redis, "$id:metadata")
 
     /** Name of the server running the game */
-    fun server(): String = redis.hget(id.toString(), "server")
+    fun server(): String? = redis.hget(id.toString(), "server")
 
     /** Sulfur dependent plugin responsible for this game */
     fun plugin(): SulfurPlugin =

@@ -38,10 +38,10 @@ class JavaSulfurTest {
     fun basic() {
         val host = UUID.randomUUID()
 
-        val game = database.registerGame(host, plugin, "azerty")
+        val game = database.registerGame(host, plugin)
 
         verify(exactly = 1) { plugin.onRegisterGame(any()) }
-        Assertions.assertEquals("azerty", game.server())
+        Assertions.assertEquals(null, game.server())
         Assertions.assertEquals("UHC Sample", game.plugin().name)
         Assertions.assertEquals(host, game.host().id)
     }

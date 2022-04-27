@@ -12,14 +12,16 @@ class SulfurDatabase(
 ) : Database {
     private val redis = JedisPooled(host, port)
 
-    override fun registerGame(host: UUID, plugin: SulfurPlugin, server: String): Game {
+    override fun registerGame(host: UUID, plugin: SulfurPlugin, server: String?): Game {
         val game = Game(UUID.randomUUID(), redis)
 
-        redis.hset(game.id.toString(), hashMapOf(
+        val hash = hashMapOf(
             "host" to host.toString(),
             "plugin" to plugin.name,
-            "server" to server,
-        ))
+        )
+        if (server != null) hash["server"] = server
+
+        redis.hset(game.id.toString(), hash)
         redis.sadd("games", game.id.toString())
 
         plugin.onRegisterGame(game)
