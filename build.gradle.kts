@@ -10,6 +10,7 @@ version = "1.0"
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://oss.sonatype.org/content/repositories/central")
@@ -21,6 +22,7 @@ dependencies {
     implementation("redis.clients:jedis:4.2.2")
 
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
+    implementation("io.phoenix.phast:phast-api:1.0")
     implementation(project(":api"))
 
     testImplementation("io.mockk:mockk:1.12.3")

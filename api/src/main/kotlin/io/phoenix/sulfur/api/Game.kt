@@ -49,6 +49,9 @@ class Game(
     /** Metadata hash for this game */
     val metadata = Metadata(redis, "games:$id:metadata")
 
+    /** Whether game is running */
+    fun running(): Boolean = redis.hget("games:$id", "running") == "1"
+
     /** Name of the server running the game */
     fun server(): String? = redis.hget("games:$id", "server")
 

@@ -31,6 +31,8 @@ class JavaSulfurTest {
 
         plugin = mockk()
         every { plugin.onRegisterGame(any()) } returns Unit
+        every { plugin.onStartGame(any()) } returns Unit
+        every { plugin.onStopGame(any()) } returns Unit
         every { plugin.name } returns "UHC Sample"
 
         sulfur = mockk()
@@ -53,6 +55,10 @@ class JavaSulfurTest {
         Assertions.assertEquals(null, game.server())
         Assertions.assertEquals("UHC Sample", game.plugin().name)
         Assertions.assertEquals(host, game.host().id)
+
+        Assertions.assertEquals(false, game.running())
+        database.startGame(game)
+        Assertions.assertEquals(true, game.running())
     }
 
     @Test

@@ -13,6 +13,18 @@ interface Database {
     fun registerGame(host: UUID, plugin: SulfurPlugin, server: String? = null): Game
     /** Finds a game from the database */
     fun findGame(id: UUID): Game?
+    /**
+     * Starts the given game
+     *
+     * @throws IllegalStateException The game is already running
+     */
+    fun startGame(game: Game)
+    /**
+     * Stops the given game
+     *
+     * @throws IllegalStateException The game is not running
+     */
+    fun stopGame(game: Game)
 
     /** Finds a player from the database */
     fun findPlayer(id: UUID): Game.Player?
