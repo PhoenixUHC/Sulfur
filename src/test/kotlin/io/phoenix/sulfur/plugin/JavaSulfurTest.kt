@@ -133,19 +133,42 @@ class JavaSulfurTest {
     }
 
     @Test
+    fun worlds() {
+        val game = database.registerGame(UUID.randomUUID(), plugin)
+
+        val w1 = game.addWorld("foo")
+        val w2 = game.addWorld("bar")
+        val w3 = game.addWorld("baz")
+
+        w3.delete()
+
+        Assertions.assertEquals(2, game.worlds().size)
+
+        Assertions.assertEquals("foo", game.findWorld("foo")?.name)
+        Assertions.assertEquals(null, game.findWorld("azerty"))
+
+        Assertions.assertEquals(true, w1.exists())
+        Assertions.assertEquals(true, w2.exists())
+        Assertions.assertEquals(false, w3.exists())
+    }
+
+    @Test
     fun multipleGames() {
         val g1 = database.registerGame(UUID.randomUUID(), plugin)
         val g2 = database.registerGame(UUID.randomUUID(), plugin)
 
-        val i1 = UUID.randomUUID()
-        val i2 = UUID.randomUUID()
-        val i3 = UUID.randomUUID()
+        g1.addWorld("foo")
+        g2.addWorld("bar")
+        g2.addWorld("baz")
 
-        g1.addPlayer(i1)
-        g1.addPlayer(i2)
-        g2.addPlayer(i3)
+        g1.addPlayer(UUID.randomUUID())
+        g1.addPlayer(UUID.randomUUID())
+        g2.addPlayer(UUID.randomUUID())
 
         Assertions.assertEquals(2, g1.players().size)
         Assertions.assertEquals(1, g2.players().size)
+
+        Assertions.assertEquals(1, g1.worlds().size)
+        Assertions.assertEquals(2, g2.worlds().size)
     }
 }

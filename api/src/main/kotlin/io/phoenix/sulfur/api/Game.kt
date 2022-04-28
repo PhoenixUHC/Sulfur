@@ -26,6 +26,20 @@ interface Game {
         fun delete()
     }
 
+    interface World {
+        /** Name of the world */
+        val name: String
+        /** Whether the world exists on the database */
+        fun exists(): Boolean
+        /** Game of the world */
+        fun game(): Game
+        /** Bukkit world */
+        fun bukkitWorld(): org.bukkit.World = Bukkit.getWorld(name)
+
+        /** Removes the world from the database, doesn't delete the world from the server */
+        fun delete()
+    }
+
     /** Identifier of this game */
     val id: UUID
     /** Whether the game exists in the database */
@@ -46,6 +60,12 @@ interface Game {
     fun addPlayer(id: UUID): Player
     /** Finds a player from its unique id */
     fun findPlayer(id: UUID): Player?
+    /** Worlds used by this game */
+    fun worlds(): HashSet<World>
+    /** Adds a world to the game */
+    fun addWorld(world: String): World
+    /** Finds a world from its name */
+    fun findWorld(world: String): World?
     /** Host for this game */
     fun bukkitHost(): OfflinePlayer
     /** List of players participating in this game */
