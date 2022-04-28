@@ -18,7 +18,7 @@ import java.util.*
 @Testcontainers
 class JavaSulfurTest {
     @Container
-    val redis = GenericContainer(DockerImageName.parse("redis:5.0.3-alpine"))
+    val redis = GenericContainer(DockerImageName.parse("redis:7.0.0-alpine"))
         .withExposedPorts(6379)
 
     lateinit var database: SulfurDatabase
