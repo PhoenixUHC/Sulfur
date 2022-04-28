@@ -12,8 +12,8 @@ class SulfurDatabase(
 ) : Database {
     private val redis = JedisPooled(host, port)
 
-    override fun registerGame(host: UUID, plugin: SulfurPlugin, server: String?): Game {
-        val game = Game(UUID.randomUUID(), redis)
+    override fun registerGame(host: UUID, plugin: SulfurPlugin, server: String?): SulfurGame {
+        val game = SulfurGame(UUID.randomUUID(), redis)
 
         val hash = hashMapOf(
             "host" to host.toString(),
@@ -31,7 +31,7 @@ class SulfurDatabase(
     }
 
     override fun findGame(id: UUID): Game? {
-        val game = Game(id, redis)
+        val game = SulfurGame(id, redis)
         return if (game.exists()) game else null
     }
 
@@ -52,7 +52,7 @@ class SulfurDatabase(
     }
 
     override fun findPlayer(id: UUID): Game.Player? {
-        val player = Game.Player(id, redis)
+        val player = SulfurGame.SulfurPlayer(id, redis)
         return if (player.exists()) player else null
     }
 }

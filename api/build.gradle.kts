@@ -15,8 +15,6 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
-
-    implementation("redis.clients:jedis:4.2.2")
 }
 
 publishing {
