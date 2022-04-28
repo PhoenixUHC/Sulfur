@@ -1,8 +1,11 @@
 package io.phoenix.sulfur.plugin
 
 import io.mockk.*
+import io.phoenix.sulfur.api.Sulfur
 import io.phoenix.sulfur.api.SulfurPlugin
+import io.phoenix.sulfur.api.gamePlayer
 import org.bukkit.Bukkit
+import org.bukkit.OfflinePlayer
 import org.bukkit.plugin.PluginManager
 import org.junit.jupiter.api.*
 import org.testcontainers.containers.GenericContainer
@@ -20,6 +23,7 @@ class JavaSulfurTest {
 
     lateinit var database: SulfurDatabase
     lateinit var plugin: SulfurPlugin
+    lateinit var sulfur: Sulfur
 
     @BeforeEach
     fun setUp() {
@@ -29,9 +33,13 @@ class JavaSulfurTest {
         every { plugin.onRegisterGame(any()) } returns Unit
         every { plugin.name } returns "UHC Sample"
 
+        sulfur = mockk()
+        every { sulfur.database } returns database
+
         mockkStatic(Bukkit::class)
         val pm: PluginManager = mockk()
         every { pm.getPlugin("UHC Sample") } returns plugin
+        every { pm.getPlugin("Sulfur") } returns sulfur
         every { Bukkit.getPluginManager() } returns pm
     }
 
@@ -107,5 +115,14 @@ class JavaSulfurTest {
         Assertions.assertEquals(game.id, p1.game().id)
         Assertions.assertEquals(game.id, p2.game().id)
         assertThrows<NullPointerException> { p3.game() }
+
+        val op1: OfflinePlayer = mockk()
+        every { op1.uniqueId } returns p1.id
+
+        val op2: OfflinePlayer = mockk()
+        every { op2.uniqueId } returns p2.id
+
+        Assertions.assertEquals(false, op1.gamePlayer()?.dead())
+        Assertions.assertEquals(true, op2.gamePlayer()?.dead())
     }
 }

@@ -33,4 +33,9 @@ class SulfurDatabase(
         val game = Game(id, redis)
         return if (game.exists()) game else null
     }
+
+    override fun findPlayer(id: UUID): Game.Player? {
+        val player = Game.Player(id, redis)
+        return if (player.exists()) player else null
+    }
 }

@@ -11,6 +11,9 @@ interface Database {
      * @param server Name of the server for this game, only specify when using a proxy
      */
     fun registerGame(host: UUID, plugin: SulfurPlugin, server: String? = null): Game
-    /** Finds a game */
+    /** Finds a game from the database */
     fun findGame(id: UUID): Game?
+
+    /** Finds a player from the database */
+    fun findPlayer(id: UUID): Game.Player?
 }
