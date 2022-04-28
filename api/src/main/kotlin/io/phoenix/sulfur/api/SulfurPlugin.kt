@@ -11,11 +11,11 @@ abstract class SulfurPlugin : JavaPlugin() {
     abstract val waitingWorld: String
 
     /** Called when a game using your plugin was registered */
-    fun onRegisterGame(@Suppress("UNUSED_PARAMETER") game: Game) {}
+    open fun onRegisterGame(@Suppress("UNUSED_PARAMETER") game: Game) {}
 
     /** Called when a game using your plugin is starting */
-    fun onStartGame(@Suppress("UNUSED_PARAMETER") game: Game) {}
+    open fun onStartGame(@Suppress("UNUSED_PARAMETER") game: Game) {}
 
     /** Called when a game using your plugin is stopping */
-    fun onStopGame(@Suppress("UNUSED_PARAMETER") game: Game) {}
+    open fun onStopGame(@Suppress("UNUSED_PARAMETER") game: Game) {}
 }
