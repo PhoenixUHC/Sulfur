@@ -104,7 +104,7 @@ class JavaSulfurTest {
         p2.dead(true)
         p3.delete()
 
-        Assertions.assertEquals(2, game.players().size)
+        Assertions.assertEquals(3, game.players().size)
 
         Assertions.assertEquals("bar", p1.metadata["foo"])
         Assertions.assertEquals(null, p1.metadata["none"])
@@ -165,8 +165,8 @@ class JavaSulfurTest {
         g1.addPlayer(UUID.randomUUID())
         g2.addPlayer(UUID.randomUUID())
 
-        Assertions.assertEquals(2, g1.players().size)
-        Assertions.assertEquals(1, g2.players().size)
+        Assertions.assertEquals(3, g1.players().size)
+        Assertions.assertEquals(2, g2.players().size)
 
         Assertions.assertEquals(1, g1.worlds().size)
         Assertions.assertEquals(2, g2.worlds().size)

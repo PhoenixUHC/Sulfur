@@ -28,4 +28,7 @@ interface Database {
 
     /** Finds a player from the database */
     fun findPlayer(id: UUID): Game.Player?
+
+    /** Finds a world from the database */
+    fun findWorld(name: String): Game.World?
 }

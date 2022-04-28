@@ -25,6 +25,8 @@ class SulfurDatabase(
         redis.hset("games:${game.id}", hash)
         redis.sadd("games", game.id.toString())
 
+        game.addPlayer(host)
+
         plugin.onRegisterGame(game)
 
         return game
@@ -54,5 +56,10 @@ class SulfurDatabase(
     override fun findPlayer(id: UUID): Game.Player? {
         val player = SulfurGame.SulfurPlayer(id, redis)
         return if (player.exists()) player else null
+    }
+
+    override fun findWorld(name: String): Game.World? {
+        val world = SulfurGame.SulfurWorld(name, redis)
+        return if (world.exists()) world else null
     }
 }
