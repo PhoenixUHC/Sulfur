@@ -21,7 +21,7 @@ class SulfurDatabase(
         )
         if (server != null) hash["server"] = server
 
-        redis.hset(game.id.toString(), hash)
+        redis.hset("games:${game.id}", hash)
         redis.sadd("games", game.id.toString())
 
         plugin.onRegisterGame(game)

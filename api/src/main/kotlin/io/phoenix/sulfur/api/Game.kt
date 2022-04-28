@@ -13,21 +13,24 @@ class Game(
     private val redis: JedisPooled,
 ) {
     class Player(
-        /** Game of the player */
-        val game: Game,
         /** Unique identifier of the player */
         val id: UUID,
+
+        private val redis: JedisPooled,
     ) {
         /** Whether the player exists */
-        fun exists(): Boolean = game.redis.sismember("${game.id}:players", id.toString())
+        fun exists(): Boolean = redis.sismember("players", id.toString())
 
         /** Metadata hash for this player */
-        val metadata = Metadata(game.redis, "${game.id}:players:$id:metadata")
+        val metadata = Metadata(redis, "players:$id:metadata")
+
+        /** Game of the player */
+        fun game(): Game = Game(UUID.fromString(redis.hget("players:$id", "game")), redis)
 
         /** Whether the player was eliminated */
-        fun dead(): Boolean = game.redis.hget("${game.id}:players:$id", "dead") != "0"
+        fun dead(): Boolean = redis.hget("players:$id", "dead") != "0"
         /** Whether the player was eliminated */
-        fun dead(dead: Boolean) = game.redis.hset("${game.id}:players:$id", "dead", if (dead) "1" else "0")
+        fun dead(dead: Boolean) = redis.hset("players:$id", "dead", if (dead) "1" else "0")
 
         /** Bukkit player */
         fun bukkitPlayer(): OfflinePlayer = Bukkit.getOfflinePlayer(id)
@@ -35,8 +38,8 @@ class Game(
         /** Removes the player from the database */
         fun delete() {
             metadata.clear()
-            game.redis.srem("${game.id}:players", id.toString())
-            game.redis.del("${game.id}:players:$id")
+            redis.srem("players", id.toString())
+            redis.del("players:$id")
         }
     }
 
@@ -44,40 +47,41 @@ class Game(
     fun exists(): Boolean = redis.sismember("games", id.toString())
 
     /** Metadata hash for this game */
-    val metadata = Metadata(redis, "$id:metadata")
+    val metadata = Metadata(redis, "games:$id:metadata")
 
     /** Name of the server running the game */
-    fun server(): String? = redis.hget(id.toString(), "server")
+    fun server(): String? = redis.hget("games:$id", "server")
 
     /** Sulfur dependent plugin responsible for this game */
     fun plugin(): SulfurPlugin =
-        Bukkit.getPluginManager().getPlugin(redis.hget(id.toString(), "plugin")) as SulfurPlugin
+        Bukkit.getPluginManager().getPlugin(redis.hget("games:$id", "plugin")) as SulfurPlugin
 
     /** Unique identifier of the host for this game */
-    fun host(): Player = Player(this, UUID.fromString(redis.hget(id.toString(), "host")))
+    fun host(): Player = Player(UUID.fromString(redis.hget("games:$id", "host")), redis)
     /** Unique identifiers of each player participating in this game */
     fun players(): HashSet<Player> = redis
-        .smembers("$id:players")
-        .map { Player(this, UUID.fromString(it)) }
+        .smembers("players")
+        .map { Player(UUID.fromString(it), redis) }
         .toHashSet()
     /** Adds a player to the game */
     fun addPlayer(id: UUID): Player {
-        redis.hset("${this.id}:players:$id", hashMapOf(
+        redis.hset("players:$id", hashMapOf(
+            "game" to this.id.toString(),
             "dead" to "0",
         ))
-        redis.sadd("${this.id}:players", id.toString())
+        redis.sadd("players", id.toString())
 
-        return Player(this, id)
+        return Player(id, redis)
     }
     /** Finds a player from its unique id */
     fun findPlayer(id: UUID): Player? {
-        val player = Player(this, id)
+        val player = Player(id, redis)
         return if (player.exists()) player else null
     }
     /** Removes a player from the game */
     fun removePlayer(id: UUID) {
-        redis.del("${this.id}:players:$id")
-        redis.srem("${this.id}:players", id.toString())
+        redis.del("players:$id")
+        redis.srem("players", id.toString())
     }
 
     /** Host for this game */
@@ -90,7 +94,6 @@ class Game(
         players().forEach { it.delete() }
         metadata.clear()
         redis.srem("games", id.toString())
-        redis.del("$id:players")
         redis.del(id.toString())
     }
 }

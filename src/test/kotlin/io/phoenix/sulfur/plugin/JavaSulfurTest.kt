@@ -9,6 +9,7 @@ import org.testcontainers.containers.GenericContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
+import java.lang.NullPointerException
 import java.util.*
 
 @Testcontainers
@@ -102,5 +103,9 @@ class JavaSulfurTest {
         Assertions.assertEquals(true, p1.exists())
         Assertions.assertEquals(true, p2.exists())
         Assertions.assertEquals(false, p3.exists())
+
+        Assertions.assertEquals(game.id, p1.game().id)
+        Assertions.assertEquals(game.id, p2.game().id)
+        assertThrows<NullPointerException> { p3.game() }
     }
 }
