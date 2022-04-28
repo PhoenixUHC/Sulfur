@@ -131,4 +131,21 @@ class JavaSulfurTest {
         Assertions.assertEquals(false, op1.gamePlayer()?.dead())
         Assertions.assertEquals(true, op2.gamePlayer()?.dead())
     }
+
+    @Test
+    fun multipleGames() {
+        val g1 = database.registerGame(UUID.randomUUID(), plugin)
+        val g2 = database.registerGame(UUID.randomUUID(), plugin)
+
+        val i1 = UUID.randomUUID()
+        val i2 = UUID.randomUUID()
+        val i3 = UUID.randomUUID()
+
+        g1.addPlayer(i1)
+        g1.addPlayer(i2)
+        g2.addPlayer(i3)
+
+        Assertions.assertEquals(2, g1.players().size)
+        Assertions.assertEquals(1, g2.players().size)
+    }
 }

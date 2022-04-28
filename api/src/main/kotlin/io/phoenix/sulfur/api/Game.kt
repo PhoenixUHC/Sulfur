@@ -65,6 +65,7 @@ class Game(
     fun players(): HashSet<Player> = redis
         .smembers("players")
         .map { Player(UUID.fromString(it), redis) }
+        .filter { it.game().id == id }
         .toHashSet()
     /** Adds a player to the game */
     fun addPlayer(id: UUID): Player {
@@ -80,11 +81,6 @@ class Game(
     fun findPlayer(id: UUID): Player? {
         val player = Player(id, redis)
         return if (player.exists()) player else null
-    }
-    /** Removes a player from the game */
-    fun removePlayer(id: UUID) {
-        redis.del("players:$id")
-        redis.srem("players", id.toString())
     }
 
     /** Host for this game */
