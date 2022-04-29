@@ -48,9 +48,8 @@ class SulfurDatabase(
     override fun stopGame(game: Game) {
         if (!game.running()) throw IllegalStateException("Game ${game.id} is not currently running")
 
-        redis.hset("games:${game.id}", "running", "0")
-
         game.plugin().onStopGame(game)
+        game.delete()
     }
 
     override fun findPlayer(id: UUID): Game.Player? {

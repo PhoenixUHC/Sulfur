@@ -58,6 +58,17 @@ class SulfurCommand(private val sulfur: io.phoenix.sulfur.plugin.JavaSulfur) : o
 
                 return true
             }
+            "stop" -> {
+                val game = sender.gamePlayer()?.game()
+                if (game == null) {
+                    sender.sendMessage("No game found")
+                    return false
+                }
+
+                sulfur.database.stopGame(game)
+
+                return true
+            }
             else -> {
                 sender.sendMessage("Unknown option \"${args[0]}\"")
                 return false
