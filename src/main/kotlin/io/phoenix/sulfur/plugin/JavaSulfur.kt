@@ -3,12 +3,15 @@ package io.phoenix.sulfur.plugin
 import io.phoenix.sulfur.api.Database
 import io.phoenix.sulfur.api.Sulfur
 import io.phoenix.sulfur.plugin.commands.SulfurCommand
+import io.phoenix.sulfur.plugin.listeners.TimeoutListener
 
 class JavaSulfur : Sulfur() {
     override lateinit var database: Database
 
     override fun onEnable() {
         saveDefaultConfig()
+
+        server.pluginManager.registerEvents(TimeoutListener(this), this)
 
         database = SulfurDatabase(
             config.getString("redis.host"),

@@ -1,3 +1,8 @@
+game:
+    # When a player quits the server while in a game, they should be removed from the game after the specified time
+    # in seconds elapsed. Defaults to 5 minutes.
+    timeout: 300
+
 # Sulfur stores data relative to games in a Redis database. Specify the address of your running Redis database.
 redis:
     host: 127.0.0.1
