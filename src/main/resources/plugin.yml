@@ -1,3 +1,8 @@
 name: Sulfur
 version: 1.0
 main: io.phoenix.sulfur.plugin.JavaSulfur
+commands:
+    sulfur:
+        description: Basic game manager
+        permission: op
+        usage: /sulfur <create|get|start|stop> [...options]
