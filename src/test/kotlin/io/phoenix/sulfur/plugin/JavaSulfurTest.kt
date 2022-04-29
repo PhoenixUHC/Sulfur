@@ -101,7 +101,7 @@ class JavaSulfurTest {
         val p3 = game.addPlayer(i3)
 
         p1.metadata["foo"] = "bar"
-        p2.dead(true)
+        p2.spectator(true)
         p3.delete()
 
         Assertions.assertEquals(3, game.players().size)
@@ -111,8 +111,8 @@ class JavaSulfurTest {
         Assertions.assertEquals(null, p2.metadata["foo"])
         Assertions.assertEquals(null, game.metadata["foo"])
 
-        Assertions.assertEquals(false, p1.dead())
-        Assertions.assertEquals(true, p2.dead())
+        Assertions.assertEquals(false, p1.spectator())
+        Assertions.assertEquals(true, p2.spectator())
 
         Assertions.assertEquals(true, p1.exists())
         Assertions.assertEquals(true, p2.exists())
@@ -128,8 +128,8 @@ class JavaSulfurTest {
         val op2: OfflinePlayer = mockk()
         every { op2.uniqueId } returns p2.id
 
-        Assertions.assertEquals(false, op1.gamePlayer()?.dead())
-        Assertions.assertEquals(true, op2.gamePlayer()?.dead())
+        Assertions.assertEquals(false, op1.gamePlayer()?.spectator())
+        Assertions.assertEquals(true, op2.gamePlayer()?.spectator())
     }
 
     @Test

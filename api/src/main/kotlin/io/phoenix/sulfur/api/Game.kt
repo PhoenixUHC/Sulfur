@@ -15,10 +15,10 @@ interface Game {
         val metadata: Metadata
         /** Game of the player */
         fun game(): Game
-        /** Whether the player was eliminated */
-        fun dead(): Boolean
-        /** Whether the player was eliminated */
-        fun dead(dead: Boolean)
+        /** Whether the player should be allowed to interact with the game */
+        fun spectator(): Boolean
+        /** Whether the player should be allowed to interact with the game */
+        fun spectator(spectator: Boolean)
         /** Bukkit player */
         fun bukkitPlayer(): OfflinePlayer = Bukkit.getOfflinePlayer(id)
 

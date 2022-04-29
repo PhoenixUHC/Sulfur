@@ -21,8 +21,11 @@ class SulfurGame(
         override fun exists(): Boolean = redis.sismember("players", id.toString())
         override val metadata = SulfurMetadata(redis, "players:$id:metadata")
         override fun game(): SulfurGame = SulfurGame(UUID.fromString(redis.hget("players:$id", "game")), redis)
-        override fun dead(): Boolean = redis.hget("players:$id", "dead") != "0"
-        override fun dead(dead: Boolean) { redis.hset("players:$id", "dead", if (dead) "1" else "0") }
+        override fun spectator(): Boolean = redis.hget("players:$id", "spec") == "1"
+        override fun spectator(spectator: Boolean) {
+            if (spectator) redis.hset("players:$id", "spec", "1")
+            else redis.hdel("players:$id", "spec")
+        }
         override fun bukkitPlayer(): OfflinePlayer = Bukkit.getOfflinePlayer(id)
         override fun delete() {
             metadata.clear()
@@ -59,7 +62,6 @@ class SulfurGame(
     override fun addPlayer(id: UUID): SulfurPlayer {
         redis.hset("players:$id", hashMapOf(
             "game" to this.id.toString(),
-            "dead" to "0",
         ))
         redis.sadd("players", id.toString())
 

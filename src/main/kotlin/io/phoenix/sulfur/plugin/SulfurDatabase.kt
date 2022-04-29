@@ -19,7 +19,6 @@ class SulfurDatabase(
         val hash = hashMapOf(
             "host" to host.toString(),
             "plugin" to plugin.name,
-            "running" to "0",
         )
         if (server != null) hash["server"] = server
 
