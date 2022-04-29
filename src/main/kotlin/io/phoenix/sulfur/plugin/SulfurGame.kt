@@ -86,7 +86,6 @@ class SulfurGame(
         val w = SulfurWorld(world, redis)
         return if (w.exists()) w else null
     }
-    override fun bukkitHost(): OfflinePlayer = plugin().server.getOfflinePlayer(host().id)
     override fun bukkitPlayers(): List<OfflinePlayer> = players().map { plugin().server.getOfflinePlayer(it.id) }
     override fun delete() {
         players().forEach { it.delete() }
