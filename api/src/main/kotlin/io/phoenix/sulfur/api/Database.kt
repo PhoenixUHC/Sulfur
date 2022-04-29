@@ -22,11 +22,7 @@ interface Database {
      * @throws IllegalStateException The game is already running
      */
     fun startGame(game: Game)
-    /**
-     * Stops the given game
-     *
-     * @throws IllegalStateException The game is not running
-     */
+    /** Stops the given game */
     fun stopGame(game: Game)
 
     /** Finds a player from the database */

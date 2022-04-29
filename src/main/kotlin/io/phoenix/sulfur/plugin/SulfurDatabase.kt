@@ -52,8 +52,6 @@ class SulfurDatabase(
     }
 
     override fun stopGame(game: Game) {
-        if (!game.running()) throw IllegalStateException("Game ${game.id} is not currently running")
-
         game.plugin().onStopGame(game)
         game.delete()
     }
