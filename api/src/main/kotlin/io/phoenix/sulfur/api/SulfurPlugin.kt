@@ -58,9 +58,6 @@ abstract class SulfurPlugin : JavaPlugin() {
         }
     }
 
-    /** Public brand of your plugin game mode */
-    abstract val brand: TextComponent
-
     /** Name of the world in which players are teleported before the host starts the game */
     abstract val waitingWorld: String
 
