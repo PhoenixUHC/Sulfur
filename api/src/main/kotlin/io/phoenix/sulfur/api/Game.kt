@@ -66,8 +66,6 @@ interface Game {
     fun addWorld(world: String): World
     /** Finds a world from its name */
     fun findWorld(world: String): World?
-    /** Host for this game */
-    fun bukkitHost(): OfflinePlayer
     /** List of players participating in this game */
     fun bukkitPlayers(): List<OfflinePlayer>
     /** Removes the game from the database */

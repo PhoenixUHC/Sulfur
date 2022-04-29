@@ -1,7 +1,6 @@
 package io.phoenix.sulfur.api
 
 import io.phoenix.sulfur.api.event.GameListener
-import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockEvent
@@ -26,11 +25,9 @@ abstract class SulfurPlugin : JavaPlugin() {
                 handler.parameterTypes[0] as Class<Event>
             else continue
 
-            val executor: EventExecutor
-
-            when (handler.parameterCount) {
-                1 -> executor = EventExecutor { _, e -> handler.invoke(listener, e) }
-                2 -> executor = EventExecutor { _, e ->
+            val executor = when (handler.parameterCount) {
+                1 -> EventExecutor { _, e -> handler.invoke(listener, e) }
+                2 -> EventExecutor { _, e ->
                     val game = when (e) {
                         is BlockEvent -> e.block.world.gameWorld()?.game()
                         is EntityEvent -> e.entity.world.gameWorld()?.game()
@@ -41,7 +38,6 @@ abstract class SulfurPlugin : JavaPlugin() {
                         is WorldEvent -> e.world.gameWorld()?.game()
                         else -> null
                     }
-
                     if (game != null && game.plugin().name == name) handler.invoke(listener, e, game)
                 }
                 else -> continue
@@ -57,9 +53,6 @@ abstract class SulfurPlugin : JavaPlugin() {
             )
         }
     }
-
-    /** Name of the world in which players are teleported before the host starts the game */
-    abstract val waitingWorld: String
 
     /** Called when a game using your plugin was registered */
     open fun onRegisterGame(@Suppress("UNUSED_PARAMETER") game: Game) {}

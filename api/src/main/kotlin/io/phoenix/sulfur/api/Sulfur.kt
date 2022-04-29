@@ -1,9 +1,8 @@
 package io.phoenix.sulfur.api
 
 import org.bukkit.Bukkit
-import org.bukkit.plugin.java.JavaPlugin
 
-abstract class Sulfur : JavaPlugin() {
+abstract class Sulfur : org.bukkit.plugin.java.JavaPlugin() {
     /** Redis database utility class */
     abstract var database: Database
 

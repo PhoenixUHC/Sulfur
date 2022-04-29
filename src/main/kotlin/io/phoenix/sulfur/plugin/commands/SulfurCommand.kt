@@ -2,17 +2,13 @@ package io.phoenix.sulfur.plugin.commands
 
 import io.phoenix.sulfur.api.SulfurPlugin
 import io.phoenix.sulfur.api.gamePlayer
-import io.phoenix.sulfur.plugin.JavaSulfur
 import org.bukkit.Bukkit
-import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class SulfurCommand(private val sulfur: JavaSulfur) : CommandExecutor {
+class SulfurCommand(private val sulfur: io.phoenix.sulfur.plugin.JavaSulfur) : org.bukkit.command.CommandExecutor {
     override fun onCommand(
-        sender: CommandSender,
-        command: Command,
+        sender: org.bukkit.command.CommandSender,
+        command: org.bukkit.command.Command,
         label: String,
         args: Array<out String>
     ): Boolean {
