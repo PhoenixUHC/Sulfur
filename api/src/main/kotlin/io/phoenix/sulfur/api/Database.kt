@@ -1,6 +1,7 @@
 package io.phoenix.sulfur.api
 
 import java.util.*
+import kotlin.collections.HashSet
 
 interface Database {
     /**
@@ -11,6 +12,8 @@ interface Database {
      * @param server Name of the server for this game, only specify when using a proxy
      */
     fun registerGame(host: UUID, plugin: SulfurPlugin, server: String? = null): Game
+    /** Every game */
+    fun games(): HashSet<Game>
     /** Finds a game from the database */
     fun findGame(id: UUID): Game?
     /**

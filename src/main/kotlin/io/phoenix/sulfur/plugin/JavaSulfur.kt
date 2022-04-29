@@ -19,4 +19,17 @@ class JavaSulfur : Sulfur() {
 
         logger.info("Enabled Sulfur")
     }
+
+    override fun onDisable() {
+        logger.info("Disabling Sulfur, stopping games")
+
+        val i = database.games().iterator()
+        while (i.hasNext()) {
+            val game = i.next()
+            logger.info("- Stopping ${game.id}")
+            database.stopGame(game)
+        }
+
+        logger.info("Done, bye bye")
+    }
 }

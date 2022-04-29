@@ -5,6 +5,7 @@ import io.phoenix.sulfur.api.Game
 import io.phoenix.sulfur.api.SulfurPlugin
 import redis.clients.jedis.JedisPooled
 import java.util.*
+import kotlin.collections.HashSet
 
 class SulfurDatabase(
     host: String,
@@ -32,6 +33,12 @@ class SulfurDatabase(
         return game
     }
 
+    override fun games(): HashSet<Game> {
+        return redis
+            .smembers("games")
+            .map { SulfurGame(UUID.fromString(it), redis) }
+            .toHashSet()
+    }
     override fun findGame(id: UUID): Game? {
         val game = SulfurGame(id, redis)
         return if (game.exists()) game else null
