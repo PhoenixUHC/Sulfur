@@ -6,6 +6,10 @@ import java.util.*
 import kotlin.collections.HashSet
 
 interface Game {
+    enum class Scenario {
+        CUT_CLEAN,
+        HASTY_BOYS,
+    }
     interface Player {
         /** Unique identifier of the player */
         val id: UUID
@@ -52,6 +56,12 @@ interface Game {
     fun server(): String?
     /** Sulfur dependent plugin responsible for this game */
     fun plugin(): SulfurPlugin
+    /** Set of scenarios for this game */
+    fun scenarios(): HashSet<Scenario>
+    /** Sets the state of the given scenario on the database */
+    fun scenario(scenario: Scenario, enabled: Boolean)
+    /** Whether the given scenario is enabled on the database */
+    fun scenario(scenario: Scenario): Boolean
     /** Unique identifier of the host for this game */
     fun host(): Player
     /** Unique identifiers of each player participating in this game */

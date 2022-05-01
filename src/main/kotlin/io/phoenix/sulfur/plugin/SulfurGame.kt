@@ -53,6 +53,18 @@ class SulfurGame(
     override fun server(): String? = redis.hget("games:$id", "server")
     override fun plugin(): SulfurPlugin =
         Bukkit.getPluginManager().getPlugin(redis.hget("games:$id", "plugin")) as SulfurPlugin
+
+    override fun scenarios(): HashSet<Game.Scenario> = redis
+        .smembers("games:$id:scenarios")
+        .mapNotNull { a -> Game.Scenario.values().find { b -> a == b.name } }
+        .toHashSet()
+
+    override fun scenario(scenario: Game.Scenario, enabled: Boolean) {
+        if (enabled) redis.sadd("games:$id:scenarios", scenario.name)
+        else redis.srem("games:$id:$scenario", scenario.name)
+    }
+
+    override fun scenario(scenario: Game.Scenario): Boolean = redis.sismember("games:$id:scenarios", scenario.name)
     override fun host(): SulfurPlayer = SulfurPlayer(UUID.fromString(redis.hget("games:$id", "host")), redis)
     override fun players(): HashSet<Game.Player> = redis
         .smembers("players")

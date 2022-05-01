@@ -1,6 +1,7 @@
 package io.phoenix.sulfur.plugin
 
 import io.mockk.*
+import io.phoenix.sulfur.api.Game
 import io.phoenix.sulfur.api.Sulfur
 import io.phoenix.sulfur.api.SulfurPlugin
 import io.phoenix.sulfur.api.gamePlayer
@@ -18,12 +19,12 @@ import java.util.*
 @Testcontainers
 class JavaSulfurTest {
     @Container
-    val redis = GenericContainer(DockerImageName.parse("redis:7.0.0-alpine"))
+    val redis: GenericContainer<*> = GenericContainer(DockerImageName.parse("redis:7.0.0-alpine"))
         .withExposedPorts(6379)
 
-    lateinit var database: SulfurDatabase
-    lateinit var plugin: SulfurPlugin
-    lateinit var sulfur: Sulfur
+    private lateinit var database: SulfurDatabase
+    private lateinit var plugin: SulfurPlugin
+    private lateinit var sulfur: Sulfur
 
     @BeforeEach
     fun setUp() {
@@ -150,6 +151,18 @@ class JavaSulfurTest {
         Assertions.assertEquals(true, w1.exists())
         Assertions.assertEquals(true, w2.exists())
         Assertions.assertEquals(false, w3.exists())
+    }
+
+    @Test
+    fun scenarios() {
+        val game = database.registerGame(UUID.randomUUID(), plugin)
+        Assertions.assertEquals(0, game.scenarios().size)
+        Assertions.assertEquals(false, game.scenario(Game.Scenario.CUT_CLEAN))
+
+        game.scenario(Game.Scenario.CUT_CLEAN, true)
+        Assertions.assertEquals(1, game.scenarios().size)
+        Assertions.assertEquals(true, game.scenario(Game.Scenario.CUT_CLEAN))
+        Assertions.assertEquals(false, game.scenario(Game.Scenario.HASTY_BOYS))
     }
 
     @Test
