@@ -2,6 +2,8 @@ package io.phoenix.sulfur.plugin
 
 import io.phoenix.sulfur.api.Game
 import io.phoenix.sulfur.api.SulfurPlugin
+import io.phoenix.sulfur.plugin.structures.SulfurPlayer
+import io.phoenix.sulfur.plugin.structures.SulfurWorld
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import redis.clients.jedis.JedisPooled
@@ -13,40 +15,6 @@ class SulfurGame(
 
     private val redis: JedisPooled,
 ) : Game {
-    class SulfurPlayer(
-        override val id: UUID,
-
-        private val redis: JedisPooled,
-    ) : Game.Player {
-        override fun exists(): Boolean = redis.sismember("players", id.toString())
-        override val metadata = SulfurMetadata(redis, "players:$id:metadata")
-        override fun game(): SulfurGame = SulfurGame(UUID.fromString(redis.hget("players:$id", "game")), redis)
-        override fun spectator(): Boolean = redis.hget("players:$id", "spec") == "1"
-        override fun spectator(spectator: Boolean) {
-            if (spectator) redis.hset("players:$id", "spec", "1")
-            else redis.hdel("players:$id", "spec")
-        }
-        override fun bukkitPlayer(): OfflinePlayer = Bukkit.getOfflinePlayer(id)
-        override fun delete() {
-            metadata.clear()
-            redis.srem("players", id.toString())
-            redis.del("players:$id")
-        }
-    }
-
-    class SulfurWorld(
-        override val name: String,
-
-        private val redis: JedisPooled,
-    ) : Game.World {
-        override fun exists(): Boolean = redis.sismember("worlds", name)
-        override fun game(): Game = SulfurGame(UUID.fromString(redis.hget("worlds:$name", "game")), redis)
-        override fun delete() {
-            redis.srem("worlds", name)
-            redis.del("worlds:$name")
-        }
-    }
-
     override fun exists(): Boolean = redis.sismember("games", id.toString())
     override val metadata = SulfurMetadata(redis, "games:$id:metadata")
     override fun running(): Boolean = redis.hget("games:$id", "running") == "1"

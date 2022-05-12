@@ -3,6 +3,8 @@ package io.phoenix.sulfur.plugin
 import io.phoenix.sulfur.api.Database
 import io.phoenix.sulfur.api.Game
 import io.phoenix.sulfur.api.SulfurPlugin
+import io.phoenix.sulfur.plugin.structures.SulfurPlayer
+import io.phoenix.sulfur.plugin.structures.SulfurWorld
 import redis.clients.jedis.JedisPooled
 import java.util.*
 import kotlin.collections.HashSet
@@ -57,12 +59,12 @@ class SulfurDatabase(
     }
 
     override fun findPlayer(id: UUID): Game.Player? {
-        val player = SulfurGame.SulfurPlayer(id, redis)
+        val player = SulfurPlayer(id, redis)
         return if (player.exists()) player else null
     }
 
     override fun findWorld(name: String): Game.World? {
-        val world = SulfurGame.SulfurWorld(name, redis)
+        val world = SulfurWorld(name, redis)
         return if (world.exists()) world else null
     }
 }
