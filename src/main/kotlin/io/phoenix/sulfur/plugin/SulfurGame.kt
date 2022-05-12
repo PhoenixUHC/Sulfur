@@ -3,6 +3,7 @@ package io.phoenix.sulfur.plugin
 import io.phoenix.sulfur.api.Game
 import io.phoenix.sulfur.api.SulfurPlugin
 import io.phoenix.sulfur.plugin.structures.SulfurPlayer
+import io.phoenix.sulfur.plugin.structures.SulfurScheduler
 import io.phoenix.sulfur.plugin.structures.SulfurWorld
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
@@ -21,6 +22,8 @@ class SulfurGame(
     override fun server(): String? = redis.hget("games:$id", "server")
     override fun plugin(): SulfurPlugin =
         Bukkit.getPluginManager().getPlugin(redis.hget("games:$id", "plugin")) as SulfurPlugin
+
+    override val scheduler: Game.Scheduler = SulfurScheduler(redis, this)
 
     override fun scenarios(): HashSet<Game.Scenario> = redis
         .smembers("games:$id:scenarios")
@@ -71,6 +74,7 @@ class SulfurGame(
     override fun bukkitPlayers(): List<OfflinePlayer> = players().map { plugin().server.getOfflinePlayer(it.id) }
     override fun delete() {
         players().forEach { it.delete() }
+        scheduler.clear()
         metadata.clear()
         redis.srem("games", id.toString())
         redis.del(id.toString())

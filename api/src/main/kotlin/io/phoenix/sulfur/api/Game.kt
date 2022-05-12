@@ -2,6 +2,8 @@ package io.phoenix.sulfur.api
 
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
+import org.bukkit.plugin.Plugin
+import org.bukkit.scheduler.BukkitTask
 import java.util.*
 import kotlin.collections.HashSet
 
@@ -44,6 +46,17 @@ interface Game {
         fun delete()
     }
 
+    interface Scheduler {
+        /** Registers a bukkit task to the scheduler */
+        fun runTaskLater(plugin: Plugin, delay: Long, run: () -> Unit): BukkitTask
+        fun runTaskTimer(plugin: Plugin, delay: Long, period: Long, run: () -> Unit): BukkitTask
+        /** Removes a task with the given id from the scheduler */
+        fun cancel(id: Int)
+
+        /** Removes every task from the scheduler */
+        fun clear()
+    }
+
     /** Identifier of this game */
     val id: UUID
     /** Whether the game exists in the database */
@@ -56,6 +69,8 @@ interface Game {
     fun server(): String?
     /** Sulfur dependent plugin responsible for this game */
     fun plugin(): SulfurPlugin
+    /** Task scheduler for this game */
+    val scheduler: Scheduler
     /** Set of scenarios for this game */
     fun scenarios(): HashSet<Scenario>
     /** Sets the state of the given scenario on the database */
