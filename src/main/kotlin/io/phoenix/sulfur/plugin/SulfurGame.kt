@@ -79,6 +79,6 @@ class SulfurGame(
         scheduler.clear()
         metadata.clear()
         redis.srem("games", id.toString())
-        redis.del(id.toString())
+        redis.del("games:$id")
     }
 }
