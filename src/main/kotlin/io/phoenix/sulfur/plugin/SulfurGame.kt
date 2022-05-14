@@ -42,6 +42,8 @@ class SulfurGame(
         .map { SulfurPlayer(UUID.fromString(it), redis) }
         .filter { it.game().id == id }
         .toHashSet()
+
+    override fun onlinePlayers(): HashSet<Game.Player> = players().filter { it.bukkitPlayer().isOnline }.toHashSet()
     override fun addPlayer(id: UUID): SulfurPlayer {
         redis.hset("players:$id", hashMapOf(
             "game" to this.id.toString(),

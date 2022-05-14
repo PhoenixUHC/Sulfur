@@ -77,10 +77,12 @@ interface Game {
     fun scenario(scenario: Scenario, enabled: Boolean)
     /** Whether the given scenario is enabled on the database */
     fun scenario(scenario: Scenario): Boolean
-    /** Unique identifier of the host for this game */
+    /** Host for this game */
     fun host(): Player
-    /** Unique identifiers of each player participating in this game */
+    /** Each player participating in this game */
     fun players(): HashSet<Player>
+    /** Each currently online player participating in this game */
+    fun onlinePlayers(): HashSet<Player>
     /** Adds a player to the game */
     fun addPlayer(id: UUID): Player
     /** Finds a player from its unique id */
