@@ -56,10 +56,6 @@ class JavaSulfurTest {
         Assertions.assertEquals(null, game.server())
         Assertions.assertEquals("UHC Sample", game.plugin().name)
         Assertions.assertEquals(host, game.host().id)
-
-        Assertions.assertEquals(false, game.running())
-        database.startGame(game)
-        Assertions.assertEquals(true, game.running())
     }
 
     @Test

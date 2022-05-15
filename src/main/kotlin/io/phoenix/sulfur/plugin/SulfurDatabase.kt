@@ -5,6 +5,7 @@ import io.phoenix.sulfur.api.Game
 import io.phoenix.sulfur.api.SulfurPlugin
 import io.phoenix.sulfur.plugin.structures.SulfurPlayer
 import io.phoenix.sulfur.plugin.structures.SulfurWorld
+import org.bukkit.Bukkit
 import redis.clients.jedis.JedisPooled
 import java.util.*
 import kotlin.collections.HashSet
@@ -21,6 +22,7 @@ class SulfurDatabase(
         val hash = hashMapOf(
             "host" to host.toString(),
             "plugin" to plugin.name,
+            "start" to "-1",
         )
         if (server != null) hash["server"] = server
 
@@ -48,7 +50,7 @@ class SulfurDatabase(
     override fun startGame(game: Game) {
         if(game.running()) throw IllegalStateException("Game ${game.id} already running")
 
-        redis.hset("games:${game.id}", "running", "1")
+        redis.hset("games:${game.id}", "start", Bukkit.getWorlds()[0].fullTime.toString())
 
         game.plugin().onStartGame(game)
     }

@@ -18,12 +18,16 @@ class SulfurGame(
 ) : Game {
     override fun exists(): Boolean = redis.sismember("games", id.toString())
     override val metadata = SulfurMetadata(redis, "games:$id:metadata")
-    override fun running(): Boolean = redis.hget("games:$id", "running") == "1"
+    override fun running(): Boolean = redis.hget("games:$id", "start") != "-1"
     override fun server(): String? = redis.hget("games:$id", "server")
     override fun plugin(): SulfurPlugin =
         Bukkit.getPluginManager().getPlugin(redis.hget("games:$id", "plugin")) as SulfurPlugin
 
     override val scheduler: Game.Scheduler = SulfurScheduler(redis, this)
+    override fun ticks(): Long {
+        val start = redis.hget("games:$id", "start")
+        return if (start == "-1") -1 else Bukkit.getWorlds()[0].fullTime - start.toLong()
+    }
 
     override fun scenarios(): HashSet<Game.Scenario> = redis
         .smembers("games:$id:scenarios")

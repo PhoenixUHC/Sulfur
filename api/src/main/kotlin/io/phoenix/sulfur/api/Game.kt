@@ -71,6 +71,8 @@ interface Game {
     fun plugin(): SulfurPlugin
     /** Task scheduler for this game */
     val scheduler: Scheduler
+    /** Amount of ticks elapsed since the beginning of the game */
+    fun ticks(): Long
     /** Set of scenarios for this game */
     fun scenarios(): HashSet<Scenario>
     /** Sets the state of the given scenario on the database */
