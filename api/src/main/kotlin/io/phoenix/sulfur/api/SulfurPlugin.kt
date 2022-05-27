@@ -62,4 +62,7 @@ abstract class SulfurPlugin : JavaPlugin() {
 
     /** Called when a game using your plugin is stopping */
     open fun onStopGame(@Suppress("UNUSED_PARAMETER") game: Game) {}
+
+    /** Called when a player joins a game */
+    open fun onAddPlayer(@Suppress("UNUSED_PARAMETER") player: Game.Player) {}
 }

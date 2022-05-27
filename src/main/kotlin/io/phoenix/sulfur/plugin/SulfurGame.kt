@@ -54,7 +54,10 @@ class SulfurGame(
         ))
         redis.sadd("players", id.toString())
 
-        return SulfurPlayer(id, redis)
+        val p = SulfurPlayer(id, redis)
+        plugin().onAddPlayer(p)
+
+        return p
     }
     override fun findPlayer(id: UUID): SulfurPlayer? {
         val player = SulfurPlayer(id, redis)
