@@ -18,7 +18,11 @@ class JavaSulfur : Sulfur() {
             config.getInt("redis.port"),
         )
 
-        getCommand("sulfur").executor = SulfurCommand(this)
+        getCommand("sulfur").let {
+            val cmd = SulfurCommand(this)
+            it.executor = cmd
+            it.tabCompleter = cmd
+        }
 
         logger.info("Enabled Sulfur")
     }

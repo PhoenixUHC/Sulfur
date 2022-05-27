@@ -3,12 +3,18 @@ package io.phoenix.sulfur.plugin.commands
 import io.phoenix.sulfur.api.SulfurPlugin
 import io.phoenix.sulfur.api.gamePlayer
 import org.bukkit.Bukkit
+import org.bukkit.command.Command
+import org.bukkit.command.CommandSender
+import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
+import org.bukkit.util.StringUtil
 
-class SulfurCommand(private val sulfur: io.phoenix.sulfur.plugin.JavaSulfur) : org.bukkit.command.CommandExecutor {
+class SulfurCommand(
+    private val sulfur: io.phoenix.sulfur.plugin.JavaSulfur,
+) : org.bukkit.command.CommandExecutor, TabCompleter {
     override fun onCommand(
-        sender: org.bukkit.command.CommandSender,
-        command: org.bukkit.command.Command,
+        sender: CommandSender,
+        command: Command,
         label: String,
         args: Array<out String>
     ): Boolean {
@@ -74,5 +80,26 @@ class SulfurCommand(private val sulfur: io.phoenix.sulfur.plugin.JavaSulfur) : o
                 return false
             }
         }
+    }
+
+    override fun onTabComplete(
+        sender: CommandSender,
+        command: Command,
+        alias: String,
+        args: Array<out String>,
+    ): MutableList<String> {
+        val completions = when (args.size) {
+            1 -> listOf("create", "start", "get", "stop")
+            2 -> if (args[0] == "create")
+                Bukkit.getPluginManager().plugins.filterIsInstance<SulfurPlugin>().map { it.name }
+            else null
+            else -> null
+        } ?: return MutableList(0) { "" }
+
+        val result: MutableList<String> = ArrayList()
+        StringUtil.copyPartialMatches(args[args.size - 1], completions, result)
+
+        result.sort()
+        return result
     }
 }
