@@ -27,7 +27,10 @@ class TimeoutListener(private val sulfur: JavaSulfur) : Listener {
                     delete()
                 }
             }.runTaskLater(sulfur, sulfur.config.getLong("game.timeout")).taskId
-        } else delete()
+        } else {
+            if (e.player.uniqueId == game.host().id) sulfur.database.stopGame(game)
+            delete()
+        }
     }
 
     @EventHandler
