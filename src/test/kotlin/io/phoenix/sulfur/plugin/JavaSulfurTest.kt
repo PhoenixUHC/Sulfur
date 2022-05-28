@@ -35,6 +35,7 @@ class JavaSulfurTest {
         every { plugin.onStartGame(any()) } returns Unit
         every { plugin.onStopGame(any()) } returns Unit
         every { plugin.onAddPlayer(any()) } returns Unit
+        every { plugin.onRemovePlayer(any()) } returns Unit
         every { plugin.name } returns "UHC Sample"
 
         sulfur = mockk()

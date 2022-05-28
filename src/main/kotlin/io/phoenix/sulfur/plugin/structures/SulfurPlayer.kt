@@ -23,6 +23,8 @@ class SulfurPlayer(
     }
     override fun bukkitPlayer(): OfflinePlayer = Bukkit.getOfflinePlayer(id)
     override fun delete() {
+        game().plugin().onRemovePlayer(this)
+
         metadata.clear()
         redis.srem("players", id.toString())
         redis.del("players:$id")

@@ -65,4 +65,7 @@ abstract class SulfurPlugin : JavaPlugin() {
 
     /** Called when a player joins a game */
     open fun onAddPlayer(@Suppress("UNUSED_PARAMETER") player: Game.Player) {}
+
+    /** Called when a player leaves a game */
+    open fun onRemovePlayer(@Suppress("UNUSED_PARAMETER") player: Game.Player) {}
 }
